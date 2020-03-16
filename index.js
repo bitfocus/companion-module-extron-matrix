@@ -458,7 +458,7 @@ class instance extends instance_skel {
 				(this.config.heartbeatInterval*1000)
 			);
 
-			this.socket.write("\\x1B3CVI\n"); // Set verbose mode and tagged responses
+			this.socket.write("\\x1B3CV\r"); // Set verbose mode and tagged responses
 			this.socket.write("I\n"); // Matrix information request
 			this.syncStates();
 		}
