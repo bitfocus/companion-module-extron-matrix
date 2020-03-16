@@ -53,8 +53,8 @@ class instance extends instance_skel {
 		this.version      = '';
 		this.model        = '';
 		this.queue        = '';
-		this.queuedDest   = -1;
-		this.queuedSource = -1;
+		this.queuedOutput = -1;
+		this.queuedInput  = -1;
 
 		this.heartbeatInterval = null;
 
@@ -64,6 +64,7 @@ class instance extends instance_skel {
 		this.rooms   = {};
 
 		this.CHOICES_INPUTS  = [];
+		this.CHOICES_LAYER   = [];
 		this.CHOICES_OUTPUTS = [];
 		this.CHOICES_PRESETS = [];
 		this.CHOICES_ROOMS   = [];
@@ -97,7 +98,6 @@ class instance extends instance_skel {
 			config.roomCounts = this.model.rooms;
 		}
 		this.roomCount = parseInt(config.roomCounts);
-
 
 		this.actions();
 	}
@@ -160,8 +160,8 @@ class instance extends instance_skel {
 			case 'route_input':
 				if (this.config.take === true) {
 					this.queue = `${opt.input}*${opt.output}!`;
-					this.queuedDest = this.selected;
-					this.queuedSource = opt.input;
+					this.queuedOutput = this.selected;
+					this.queuedInput = opt.input;
 					this.checkFeedbacks('take');
 					this.checkFeedbacks('take_tally_input');
 					this.checkFeedbacks('take_tally_output');
@@ -175,8 +175,8 @@ class instance extends instance_skel {
 				cmd = this.queue; //intentional fall-though
 			case 'clear':
 				this.queue = '';
-				this.queuedDest = -1;
-				this.queuedSource = -1;
+				this.queuedOutput = -1;
+				this.queuedInput = -1;
 				this.checkFeedbacks('take');
 				this.checkFeedbacks('take_tally_input');
 				this.checkFeedbacks('take_tally_output');
@@ -634,6 +634,7 @@ class instance extends instance_skel {
 			}
 		}
 
+		// Final status check to close initial sync
 		this.socket.write('S');
 	}
 
@@ -661,27 +662,6 @@ class instance extends instance_skel {
 
 		if (resetConnection === true || this.socket === undefined) {
 			this.initTCP();
-		}
-	}
-
-	/**
-	 * INTERNAL: Updates device data from the HyperDeck
-	 *
-	 * @param {String} object - the collected data
-	 * @access protected
-	 * @since 1.0.0
-	 */
-	updateDevice(object) {
-
-		const value = object.split(",")
-
-		if (Array.isArray(info)) {
-			this.deviceName = info[2];
-			this.version = info[3];
-			this.model = info[4];
-			this.log('info', `Connected to a ${this.deviceName} (${this.version} - ${this.model})`);
-
-			this.setModel(this.model);
 		}
 	}
 }

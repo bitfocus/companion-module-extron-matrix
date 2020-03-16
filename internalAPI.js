@@ -85,42 +85,24 @@ module.exports = {
 	},
 
 	/**
-	 * INTERNAL: Updates device data from the Videohub
+	 * INTERNAL: Updates device data from the matrix
 	 *
-	 * @param {string} labeltype - the command/data type being passed
-	 * @param {Object} object - the collected data
+	 * @param {String} object - the collected data
 	 * @access protected
 	 * @since 1.0.0
 	 */
-	updateDevice(labeltype, object) {
+	updateDevice(object) {
 
-		for (var key in object) {
-			var parsethis = object[key];
-			var a = parsethis.split(/: /);
-			var attribute = a.shift();
-			var value = a.join(" ");
+		let info = object.split(",")
 
-			switch (attribute) {
-				case 'Model name':
-					this.deviceName = value;
-					this.log('info', 'Connected to a ' + this.deviceName);
-					break;
-				case 'Video inputs':
-					this.config.inputCount = value;
-					break;
-				case 'Video outputs':
-					this.config.outputCount = value;
-					break;
-				case 'Video monitoring outputs':
-					this.config.monitoringCount = value;
-					break;
-				case 'Serial ports':
-					this.config.serialCount = value;
-					break;
-			}
+		if (Array.isArray(info)) {
+			this.deviceName = info[2];
+			this.version = info[3];
+			this.model = info[4];
+			this.log('info', `Connected to a ${this.deviceName} (${this.version} - ${this.model})`);
+
+			this.setModel(this.model);
 		}
-
-		this.saveConfig();
 	},
 
 	/**

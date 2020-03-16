@@ -43,11 +43,6 @@ module.exports = {
 		'60-1255-01': { id: '60-1255-01', label: 'FOX Matrix 14400 Frame', description: 'FOX Matrix 14400 Frame', inputs: 144, outputs: 144, video: true, audio: false, nameLen: 12, rooms: 10, roomLen: 12, roomPresets: 10, globalPresets: 64, edid: false, laser: true, hdcp: false, cec: false, xtp: false },
 		'60-1082-01': { id: '60-1082-01', label: 'FOX Matrix 320x Frame',  description: 'FOX Matrix 320x Frame',  inputs: 320, outputs: 320, video: true, audio: false, nameLen: 12, rooms: 10, roomLen: 12, roomPresets: 10, globalPresets: 64, edid: false, laser: true, hdcp: false, cec: false, xtp: false },
 	},
-	CHOICES_LAYER: [
-		{ label: 'Video & Audio', id: '!' },
-		{ label: 'Video only', id: '%' },
-		{ label: 'Audio only', id: '$'}
-	],
 	BG_COLOR_FIELD: function(defaultColor) {
 		return {
 			type: 'colorpicker',

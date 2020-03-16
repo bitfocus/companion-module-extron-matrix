@@ -90,7 +90,7 @@ module.exports = {
 				this.INPUT_FIELD
 			],
 			callback: (feedback, bank) => {
-				if (parseInt(feedback.options.input) == this.queuedSource && this.selected == this.queuedDest) {
+				if (parseInt(feedback.options.input) == this.queuedInput && this.selected == this.queuedOutput) {
 					return {
 						color: feedback.options.fg,
 						bgcolor: feedback.options.bg
@@ -108,7 +108,7 @@ module.exports = {
 				this.OUTPUT_FIELD
 			],
 			callback: (feedback, bank) => {
-				if (parseInt(feedback.options.output) == this.queuedDest) {
+				if (parseInt(feedback.options.output) == this.queuedOutput) {
 					return {
 						color: feedback.options.fg,
 						bgcolor: feedback.options.bg
