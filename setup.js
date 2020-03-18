@@ -71,7 +71,7 @@ module.exports = {
 		label: 'Layer',
 		id: 'type',
 		default: '!',
-		choices: this.CHOICES_LAYER
+		choices: this.CHOICES_LAYERS
 	},
 	NAME_FIELD: {
 		type: 'textinput',

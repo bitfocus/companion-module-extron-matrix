@@ -64,7 +64,7 @@ class instance extends instance_skel {
 		this.rooms   = {};
 
 		this.CHOICES_INPUTS  = [];
-		this.CHOICES_LAYER   = [];
+		this.CHOICES_LAYERS   = [];
 		this.CHOICES_OUTPUTS = [];
 		this.CHOICES_PRESETS = [];
 		this.CHOICES_ROOMS   = [];
@@ -79,25 +79,23 @@ class instance extends instance_skel {
 			this.model = this.CONFIG_MODEL['generic'];
 		}
 
-		if (config.inputCount === undefined) {
-			config.inputCount = this.model.inputs;
+		if (this.config.inputCount === undefined) {
+			this.config.inputCount = this.model.inputs;
 		}
-		this.inputCount = parseInt(config.inputCount);
+		if (this.config.outputCount === undefined) {
+			this.config.outputCount = this.model.outputs;
+		}
+		if (this.config.presetCount === undefined) {
+			this.config.presetCount = this.model.globalPresets;
+		}
+		if (this.config.roomCounts === undefined) {
+			this.config.roomCounts = this.model.rooms;
+		}
 
-		if (config.outputCount === undefined) {
-			config.outputCount = this.model.outputs;
-		}
-		this.outputCount = parseInt(config.outputCount);
-
-		if (config.presetCount === undefined) {
-			config.presetCount = this.model.globalPresets;
-		}
-		this.presetCount = parseInt(config.presetCount);
-
-		if (config.roomCounts === undefined) {
-			config.roomCounts = this.model.rooms;
-		}
-		this.roomCount = parseInt(config.roomCounts);
+		this.inputCount  = this.config.inputCount;
+		this.outputCount = this.config.outputCount;
+		this.presetCount = this.config.presetCount;
+		this.roomCount   = this.config.roomCounts;
 
 		this.actions();
 	}
@@ -526,14 +524,14 @@ class instance extends instance_skel {
 		this.CHOICES_ROOMS   = [];
 
 		if (this.model.audio === true) {
-			this.CHOICES_LAYER = [
+			this.CHOICES_LAYERS = [
 				{ label: 'Video & Audio', id: '!' },
 				{ label: 'Video only', id: '%' },
 				{ label: 'Audio only', id: '$'}
 			];
 		}
 		else {
-			this.CHOICES_LAYER = [
+			this.CHOICES_LAYERS = [
 				{ label: 'Video & Audio', id: '!' }
 			];
 		}
@@ -569,6 +567,12 @@ class instance extends instance_skel {
 				}
 			}
 		}
+
+		this.INPUT_FIELD.choices = this.CHOICES_INPUTS;
+		this.LAYER_FIELD.choices = this.CHOICES_LAYERS;
+		this.OUTPUT_FIELD.choices = this.CHOICES_OUTPUTS;
+		this.PRESET_FIELD.choices = this.CHOICES_PRESETS;
+		this.ROOM_FIELD.choices = this.CHOICES_ROOMS;
 	}
 
 	/**
@@ -648,17 +652,22 @@ class instance extends instance_skel {
 	updateConfig(config) {
 		var resetConnection = false;
 
-		if (this.config.host != config.host)
-		{
+		if (this.config.host != config.host) {
 			resetConnection = true;
 		}
 
-		this.config = config;
+		if (this.config.modelID != config.modelID) {
+			this.config = config;
+			this.setModel(this.config.model);
+		}
+		else {
+			this.config = config;
 
-		this.actions();
-		this.initVariables();
-		this.initFeedbacks();
-		this.initPresets();
+			this.actions();
+			this.initVariables();
+			this.initFeedbacks();
+			this.initPresets();
+		}
 
 		if (resetConnection === true || this.socket === undefined) {
 			this.initTCP();
