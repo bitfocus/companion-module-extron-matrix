@@ -365,7 +365,7 @@ class instance extends instance_skel {
 					this.loggedIn = false;
 					this.synced = false;
 					receivebuffer = '';
-					this.socket.write(this.config.password + '\r');
+					this.socket.write('\r' + this.config.password + '\r');
 				}
 			});
 
@@ -405,6 +405,11 @@ class instance extends instance_skel {
 		if (data.match(/60-/)) {
 			this.loggedIn = true;
 			this.status(this.STATUS_OK);
+			data = data.trim();
+
+			if (this.config.modelID != data) {
+				this.setModel(data);
+			}
 		}
 		else if (data.match(/Sts/)) {
 			this.synced = true;
@@ -446,7 +451,7 @@ class instance extends instance_skel {
 	 */
 	processLogin(data) {
 
-		if (data.match(/Login/)) {
+		if (data.match(/Login/) || data.match(/Vrb3/)) {
 			let info = data.split(" ");
 			this.loggedIn = true;
 			this.status(this.STATUS_OK);
@@ -457,12 +462,13 @@ class instance extends instance_skel {
 			);
 
 			this.socket.write("\\x1B3CV\r"); // Set verbose mode and tagged responses
-			this.socket.write("I\n"); // Matrix information request
+			this.socket.write("I\r"); // Matrix information request
 			this.syncStates();
 		}
 		else if (data.match(/Extron Electronics/)) {
 			this.updateDevice(data);
 			this.status(this.STATUS_WARNING,'Logging in');
+			this.socket.write("\\x1B3CV\r");
 		}
 	}
 
