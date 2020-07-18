@@ -336,7 +336,7 @@ class instance extends instance_skel {
 				this.synced = false;
 			});
 
-			this.socket.on('disconnect', () => {
+			this.socket.on('end', () => {
 				this.debug("Disconnected");
 				this.loggedIn = false;
 				this.synced = false;
